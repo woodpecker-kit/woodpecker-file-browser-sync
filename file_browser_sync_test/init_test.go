@@ -23,6 +23,8 @@ const (
 
 	mockVersion = "v1.0.0"
 	mockName    = "woodpecker-file-browser-sync"
+
+	keyLinkSpeedTestUrls = "ENV_LINK_SPEED_TEST_URLS"
 )
 
 var (
