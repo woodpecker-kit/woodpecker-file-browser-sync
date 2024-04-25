@@ -23,6 +23,8 @@ const (
 
 	mockVersion = "v1.0.0"
 	mockName    = "woodpecker-file-browser-sync"
+
+	keyLinkSpeedTestUrls = "ENV_LINK_SPEED_TEST_URLS"
 )
 
 var (
@@ -40,19 +42,24 @@ var (
 
 	// mustSetArgsAsEnvList
 	mustSetArgsAsEnvList = []string{
-		//file_browser_sync.EnvStepsTransferDemo,
+		file_browser_sync.EnvFileBrowserUrls,
+		file_browser_sync.EnvFileBrowserUsername,
+		file_browser_sync.EnvFileBrowserUserPassword,
 	}
 
-	valEnvTimeoutSecond uint
-	valEnvPluginDebug   = false
-
-	// change or remove test case if valForm env start
-
-	valEnvPaddingLeftMax   = 0
-	valEnvPrinterPrintKeys []string
-
-	// change or remove test case if valForm env end
-
+	valEnvTimeoutSecond                   uint
+	valEnvPluginDebug                     = false
+	valEnvSyncMode                        = file_browser_sync.SyncModeDown
+	valEnvFileBrowserUrls                 []string
+	valEnvFileBrowserUsernames            string
+	valEnvFileBrowserUserPasswords        = ""
+	valEnvFileBrowserStandbyUrl           = ""
+	varEnvFileBrowserStandbyUsernames     = ""
+	valEnvFileBrowserStandbyUserPasswords = ""
+	valEnvSyncWorkSpacePath               = ""
+	valEnvSyncIncludeGlobs                []string
+	valEnvSyncExcludeGlobs                []string
+	valEnvSyncDryRun                      = false
 )
 
 func init() {
@@ -66,10 +73,17 @@ func init() {
 	valEnvTimeoutSecond = uint(env_kit.FetchOsEnvInt(wd_flag.EnvKeyPluginTimeoutSecond, 10))
 	valEnvPluginDebug = env_kit.FetchOsEnvBool(wd_flag.EnvKeyPluginDebug, false)
 
-	// change or remove test case if valForm env start
-	valEnvPaddingLeftMax = env_kit.FetchOsEnvInt(file_browser_sync.EnvPrinterPaddingLeftMax, 24)
-	valEnvPrinterPrintKeys = env_kit.FetchOsEnvStringSlice(file_browser_sync.EnvPrinterPrintKeys)
-	// change or remove test case if valForm env end
+	valEnvSyncMode = env_kit.FetchOsEnvStr(file_browser_sync.EnvSyncMode, file_browser_sync.SyncModeDown)
+	valEnvFileBrowserUrls = env_kit.FetchOsEnvStringSlice(file_browser_sync.EnvFileBrowserUrls)
+	valEnvFileBrowserUsernames = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserUsername, "")
+	valEnvFileBrowserUserPasswords = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserUserPassword, "")
+	valEnvFileBrowserStandbyUrl = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserStandbyUrl, "")
+	varEnvFileBrowserStandbyUsernames = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserStandbyUsername, "")
+	valEnvFileBrowserStandbyUserPasswords = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserStandbyUserPassword, "")
+	valEnvSyncWorkSpacePath = env_kit.FetchOsEnvStr(file_browser_sync.EnvSyncWorkSpacePath, "")
+	valEnvSyncIncludeGlobs = env_kit.FetchOsEnvStringSlice(file_browser_sync.EnvSyncIncludeGlobs)
+	valEnvSyncExcludeGlobs = env_kit.FetchOsEnvStringSlice(file_browser_sync.EnvSyncExcludeGlobs)
+	valEnvSyncDryRun = env_kit.FetchOsEnvBool(file_browser_sync.EnvSyncDryRun, false)
 }
 
 // test case basic tools start
@@ -125,14 +139,20 @@ func mockPluginSettings() file_browser_sync.Settings {
 		TimeoutSecond:     valEnvTimeoutSecond,
 		RootPath:          testGoldenKit.GetTestDataFolderFullPath(),
 		StepsTransferPath: wd_steps_transfer.DefaultKitStepsFileName,
+
+		SyncMode:                       valEnvSyncMode,
+		FileBrowserUrls:                valEnvFileBrowserUrls,
+		FileBrowserUsername:            valEnvFileBrowserUsernames,
+		FileBrowserUserPassword:        valEnvFileBrowserUserPasswords,
+		FileBrowserStandbyUrl:          valEnvFileBrowserStandbyUrl,
+		FileBrowserStandbyUsername:     varEnvFileBrowserStandbyUsernames,
+		FileBrowserStandbyUserPassword: valEnvFileBrowserStandbyUserPasswords,
+		SyncWorkSpaceAbsPath:           valEnvSyncWorkSpacePath,
+		SyncIncludeGlobs:               valEnvSyncIncludeGlobs,
+		SyncExcludeGlobs:               valEnvSyncExcludeGlobs,
+		DryRun:                         valEnvSyncDryRun,
 	}
 
-	// change or remove this code for each test case start
-
-	settings.PaddingLeftMax = valEnvPaddingLeftMax
-	settings.EnvPrintKeys = valEnvPrinterPrintKeys
-
-	// change or remove this code for each test case end
 	return settings
 
 }

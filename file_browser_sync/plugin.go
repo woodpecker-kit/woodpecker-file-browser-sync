@@ -1,6 +1,7 @@
 package file_browser_sync
 
 import (
+	"github.com/sinlov/filebrowser-client/file_browser_client"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_info"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_short_info"
 )
@@ -17,6 +18,8 @@ type (
 		Settings Settings
 
 		FuncFileBrowserSync FuncFileBrowserSync `json:"-"`
+
+		fileBrowserClient *file_browser_client.FileBrowserClient
 	}
 )
 
@@ -33,4 +36,17 @@ type FuncFileBrowserSync interface {
 	loadStepsTransfer() error
 	checkArgs() error
 	saveStepsTransfer() error
+}
+
+//nolint:golint,unused
+type syncFileBrowserBiz interface {
+	chooseFileBrowserConnect()
+
+	doSyncCheck() error
+
+	doSyncByFileBrowser() error
+
+	doSyncModeUpload() error
+
+	doSyncModeDown() error
 }
