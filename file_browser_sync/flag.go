@@ -1,29 +1,48 @@
 package file_browser_sync
 
 import (
+	"fmt"
 	"github.com/urfave/cli/v2"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_flag"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_info"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_log"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_short_info"
+	"strings"
 )
 
 const (
-	// change or remove this code start
+	CliNameSyncMode = "settings.sync-mode"
+	EnvSyncMode     = "PLUGIN_SYNC_MODE"
 
-	CliNameNotEmptyEnvs = "settings.not-empty-envs"
-	EnvNotEmptyEnvs     = "PLUGIN_NOT_EMPTY_ENVS"
+	CliNameFileBrowserUrls = "settings.file-browser-urls"
+	EnvFileBrowserUrls     = "PLUGIN_FILE_BROWSER_URLS"
 
-	CliNamePrinterPrintKeys = "settings.env-printer-print-keys"
-	EnvPrinterPrintKeys     = "PLUGIN_ENV_PRINTER_PRINT_KEYS"
+	CliNameFileBrowserUsernames = "settings.file-browser-usernames"
+	EnvFileBrowserUsernames     = "PLUGIN_FILE_BROWSER_USERNAMES"
 
-	CliNamePrinterPaddingLeftMax = "settings.env-printer-padding-left-max"
-	EnvPrinterPaddingLeftMax     = "PLUGIN_ENV_PRINTER_PADDING_LEFT_MAX"
+	CliNameFileBrowserUserPasswords = "settings.file-browser-user-passwords"
+	EnvFileBrowserUserPasswords     = "PLUGIN_FILE_BROWSER_USER_PASSWORDS"
 
-	CliNameStepsTransferDemo = "settings.steps-transfer-demo"
-	EnvStepsTransferDemo     = "PLUGIN_STEPS_TRANSFER_DEMO"
+	CliNameFileBrowserStandbyUrl = "settings.file-browser-standby-url"
+	EnvFileBrowserStandbyUrl     = "PLUGIN_FILE_BROWSER_STANDBY_URL"
 
-	// change or remove this code end
+	CliNameFileBrowserStandbyUsername = "settings.file-browser-standby-username"
+	EnvFileBrowserStandbyUsername     = "PLUGIN_FILE_BROWSER_STANDBY_USERNAME"
+
+	CliNameFileBrowserStandbyUserPassword = "settings.file-browser-standby-user-passwords"
+	EnvFileBrowserStandbyUserPassword     = "PLUGIN_FILE_BROWSER_STANDBY_USER_PASSWORDS"
+
+	CliNameSyncWorkSpacePath = "settings.sync-work-space-path"
+	EnvSyncWorkSpacePath     = "PLUGIN_SYNC_WORK_SPACE_PATH"
+
+	CliNameSyncIncludeGlobs = "settings.sync-include-globs"
+	EnvSyncIncludeGlobs     = "PLUGIN_SYNC_INCLUDE_GLOBS"
+
+	CliNameSyncExcludeGlobs = "settings.sync-exclude-globs"
+	EnvSyncExcludeGlobs     = "PLUGIN_SYNC_EXCLUDE_GLOBS"
+
+	CliNameSyncDryRun = "settings.sync-dry-run"
+	EnvSyncDryRun     = "PLUGIN_SYNC_DRY_RUN"
 )
 
 // GlobalFlag
@@ -31,44 +50,79 @@ const (
 func GlobalFlag() []cli.Flag {
 	return []cli.Flag{
 
-		// change or remove start
-
-		// new flag string template if no use, please replace this start
-		&cli.StringSliceFlag{
-			Name:    CliNameNotEmptyEnvs,
-			Usage:   "if use this args, will check envs must not empty, fail will exit not 0",
-			EnvVars: []string{EnvNotEmptyEnvs},
+		&cli.StringFlag{
+			Name:    CliNameSyncMode,
+			Usage:   fmt.Sprintf("set sync mode, support: %s", strings.Join(syncModeSupport, ", ")),
+			Value:   SyncModeDown,
+			EnvVars: []string{EnvSyncMode},
 		},
 		&cli.StringSliceFlag{
-			Name:    CliNamePrinterPrintKeys,
-			Usage:   "if use this args, will print env by keys",
-			EnvVars: []string{EnvPrinterPrintKeys},
+			Name:    CliNameFileBrowserUrls,
+			Usage:   "set file browser support multi urls, will auto switch host fast, if not set or host not work, will use standby url",
+			EnvVars: []string{EnvFileBrowserUrls},
 		},
-		&cli.IntFlag{
-			Name:    CliNamePrinterPaddingLeftMax,
-			Usage:   "set env printer padding left max count, minimum 24, default 32",
-			EnvVars: []string{EnvPrinterPaddingLeftMax},
-			Value:   32,
+		&cli.StringFlag{
+			Name:    CliNameFileBrowserUsernames,
+			Usage:   "set file browser username for multi urls",
+			EnvVars: []string{EnvFileBrowserUsernames},
+		},
+		&cli.StringFlag{
+			Name:    CliNameFileBrowserUserPasswords,
+			Usage:   "set file browser user password for multi urls",
+			EnvVars: []string{EnvFileBrowserUserPasswords},
+		},
+		&cli.StringFlag{
+			Name:    CliNameFileBrowserStandbyUrl,
+			Usage:   "set file browser standby url, if  multi urls not work, will use this",
+			EnvVars: []string{EnvFileBrowserStandbyUrl},
+		},
+		&cli.StringFlag{
+			Name:    CliNameFileBrowserStandbyUsername,
+			Usage:   "set file browser username for standby url",
+			EnvVars: []string{EnvFileBrowserStandbyUsername},
+		},
+		&cli.StringFlag{
+			Name:    CliNameFileBrowserStandbyUserPassword,
+			Usage:   "set file browser user password for standby url",
+			EnvVars: []string{EnvFileBrowserStandbyUserPassword},
+		},
+		&cli.StringFlag{
+			Name:    CliNameSyncWorkSpacePath,
+			Usage:   "sync path under workspace path",
+			EnvVars: []string{EnvSyncWorkSpacePath},
+		},
+		&cli.StringSliceFlag{
+			Name:    CliNameSyncIncludeGlobs,
+			Usage:   "sync include globs",
+			EnvVars: []string{EnvSyncIncludeGlobs},
+		},
+		&cli.StringSliceFlag{
+			Name:    CliNameSyncExcludeGlobs,
+			Usage:   "sync exclude globs",
+			EnvVars: []string{EnvSyncExcludeGlobs},
 		},
 		&cli.BoolFlag{
-			Name:    CliNameStepsTransferDemo,
-			Usage:   "if use this args, will print steps transfer demo",
-			EnvVars: []string{EnvStepsTransferDemo},
+			Name:    CliNameSyncDryRun,
+			Usage:   "dry run, only print some info, not real sync",
+			EnvVars: []string{EnvSyncDryRun},
 		},
-		// env_printer_plugin end
-		//&cli.StringFlag{
-		//	Name:    "settings.new_arg",
-		//	Usage:   "",
-		//	EnvVars: []string{"PLUGIN_new_arg"},
-		//},
-		// new flag string template if no use, please replace this end
-
-		// change or remove end
 	}
 }
 
+const (
+	CliNameFileBrowserSyncTimeoutSecond = "settings.file-browser-sync-timeout-second"
+	EnvFileBrowserSyncTimeoutSecond     = "PLUGIN_FILE_BROWSER_SYNC_TIMEOUT_SECOND"
+)
+
 func HideGlobalFlag() []cli.Flag {
-	return []cli.Flag{}
+	return []cli.Flag{
+		&cli.UintFlag{
+			Name:    CliNameFileBrowserSyncTimeoutSecond,
+			Usage:   "file browser sync timeout second",
+			Hidden:  true,
+			EnvVars: []string{EnvFileBrowserSyncTimeoutSecond},
+		},
+	}
 }
 
 func BindCliFlags(c *cli.Context,
@@ -86,26 +140,23 @@ func BindCliFlags(c *cli.Context,
 		StepsOutDisable:   stepsOutDisable,
 		RootPath:          rootPath,
 
-		// change or remove this code start
-		NotEmptyEnvKeys:   c.StringSlice(CliNameNotEmptyEnvs),
-		EnvPrintKeys:      c.StringSlice(CliNamePrinterPrintKeys),
-		PaddingLeftMax:    c.Int(CliNamePrinterPaddingLeftMax),
-		StepsTransferDemo: c.Bool(CliNameStepsTransferDemo),
-		// change or remove this code end
-	}
+		DryRun:   c.Bool(CliNameSyncDryRun),
+		SyncMode: c.String(CliNameSyncMode),
 
-	// set default TimeoutSecond
-	if config.TimeoutSecond == 0 {
-		config.TimeoutSecond = 10
-	}
+		FileBrowserUrls:         c.StringSlice(CliNameFileBrowserUrls),
+		FileBrowserUsername:     c.String(CliNameFileBrowserUsernames),
+		FileBrowserUserPassword: c.String(CliNameFileBrowserUserPasswords),
 
-	// change or remove start
+		FileBrowserStandbyUrl:          c.String(CliNameFileBrowserStandbyUrl),
+		FileBrowserStandbyUsername:     c.String(CliNameFileBrowserStandbyUsername),
+		FileBrowserStandbyUserPassword: c.String(CliNameFileBrowserStandbyUserPassword),
 
-	// set default PaddingLeftMax
-	if config.PaddingLeftMax < 24 {
-		config.PaddingLeftMax = 24
+		SyncWorkSpaceAbsPath: c.String(CliNameSyncWorkSpacePath),
+		SyncIncludeGlobs:     c.StringSlice(CliNameSyncIncludeGlobs),
+		SyncExcludeGlobs:     c.StringSlice(CliNameSyncExcludeGlobs),
+
+		SyncTimeoutSecond: c.Uint(CliNameFileBrowserSyncTimeoutSecond),
 	}
-	// change or remove start
 
 	wd_log.Debugf("args %s: %v", wd_flag.NameCliPluginTimeoutSecond, config.TimeoutSecond)
 

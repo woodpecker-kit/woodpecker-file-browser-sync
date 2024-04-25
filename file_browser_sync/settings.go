@@ -1,15 +1,13 @@
 package file_browser_sync
 
-import "github.com/woodpecker-kit/woodpecker-tools/wd_info"
-
 const (
-	// change or remove settings config const start
+	TimeoutSecondMinimum     = 10
+	SyncTimeoutSecondMinimum = 60
 
-	// StepsTransferMarkDemoConfig
-	// steps transfer key
-	StepsTransferMarkDemoConfig = "demo_config"
+	SyncModeSync = "upload"
+	SyncModeDown = "download"
 
-	// change or remove settings config const end
+	SyncFileBrowseRemoteRootPath = ".sync"
 )
 
 type (
@@ -21,30 +19,31 @@ type (
 		StepsOutDisable   bool
 		RootPath          string
 
-		// change or remove this config demo start
-		NotEmptyEnvKeys   []string
-		EnvPrintKeys      []string
-		PaddingLeftMax    int
-		StepsTransferDemo bool
-		// change or remove this config demo end
+		DryRun   bool
+		SyncMode string
 
-		DryRun bool
+		FileBrowserUrls         []string
+		FileBrowserUsername     string
+		FileBrowserUserPassword string
+
+		FileBrowserStandbyUrl          string
+		FileBrowserStandbyUsername     string
+		FileBrowserStandbyUserPassword string
+
+		SyncWorkSpaceAbsPath string
+
+		syncWorkSpacePath string // this path will append to RootPath
+
+		SyncIncludeGlobs []string
+		SyncExcludeGlobs []string
+
+		SyncTimeoutSecond uint
 	}
 )
 
 var (
-
-	// change or remove settings config check args start
-
-	// pluginBuildStateSupport
-	pluginBuildStateSupport = []string{
-		wd_info.BuildStatusCreated,
-		wd_info.BuildStatusRunning,
-		wd_info.BuildStatusSuccess,
-		wd_info.BuildStatusFailure,
-		wd_info.BuildStatusError,
-		wd_info.BuildStatusKilled,
+	syncModeSupport = []string{
+		SyncModeSync,
+		SyncModeDown,
 	}
-
-	// change or remove settings config check args end
 )

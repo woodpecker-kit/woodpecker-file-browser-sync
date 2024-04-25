@@ -24,13 +24,74 @@ func TestCheckArgsPlugin(t *testing.T) {
 		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
 	successArgsSettings := mockPluginSettings()
+	successArgsSettings.FileBrowserStandbyUrl = "foo.com"
+	successArgsSettings.FileBrowserStandbyUsername = "baz"
+	successArgsSettings.FileBrowserStandbyUserPassword = "bar"
 
-	// notSupport
-	notSupportWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
-		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "notSupport")),
-		wd_mock.FastCurrentStatus("not_support"),
+	// modeNotSupport
+	modeNotSupportWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
+		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "modeNotSupport")),
+		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
-	notSupportSettings := mockPluginSettings()
+	modeNotSupportSettings := mockPluginSettings()
+	modeNotSupportSettings.SyncMode = "not-support"
+
+	// fileBrowserUrlsNotSetUserName
+	fileBrowserUrlsNotSetUserNameWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
+		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "fileBrowserUrlsNotSetUserName")),
+		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
+	)
+	fileBrowserUrlsNotSetUserNameSettings := mockPluginSettings()
+	fileBrowserUrlsNotSetUserNameSettings.FileBrowserUrls = []string{"foo.com"}
+	fileBrowserUrlsNotSetUserNameSettings.FileBrowserUsername = ""
+
+	// fileBrowserUrlsNotSetUserPassword
+	fileBrowserUrlsNotSetUserPasswordWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
+		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "fileBrowserUrlsNotSetUserPassword")),
+		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
+	)
+	fileBrowserUrlsNotSetUserPasswordSettings := mockPluginSettings()
+	fileBrowserUrlsNotSetUserPasswordSettings.FileBrowserUrls = []string{"foo.com"}
+	fileBrowserUrlsNotSetUserPasswordSettings.FileBrowserUsername = "baz"
+	fileBrowserUrlsNotSetUserPasswordSettings.FileBrowserUserPassword = ""
+
+	// fileBrowserStandbyUrlsNotSetUserName
+	fileBrowserStandbyUrlsNotSetUserNameWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
+		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "fileBrowserStandbyUrlsNotSetUserName")),
+		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
+	)
+	fileBrowserStandbyUrlsNotSetUserNameSettings := mockPluginSettings()
+	fileBrowserStandbyUrlsNotSetUserNameSettings.FileBrowserUrls = []string{"foo.com"}
+	fileBrowserStandbyUrlsNotSetUserNameSettings.FileBrowserUsername = "baz"
+	fileBrowserStandbyUrlsNotSetUserNameSettings.FileBrowserUserPassword = "bar"
+	fileBrowserStandbyUrlsNotSetUserNameSettings.FileBrowserStandbyUrl = "foo.com"
+	fileBrowserStandbyUrlsNotSetUserNameSettings.FileBrowserStandbyUsername = ""
+
+	// fileBrowserStandbyUrlsNotSetUserPassword
+	fileBrowserStandbyUrlsNotSetUserPasswordWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
+		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "fileBrowserStandbyUrlsNotSetUserPassword")),
+		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
+	)
+	fileBrowserStandbyUrlsNotSetUserPasswordSettings := mockPluginSettings()
+	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserUrls = []string{"foo.com"}
+	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserUsername = "baz"
+	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserUserPassword = "bar"
+	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserStandbyUrl = "foo.com"
+	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserStandbyUsername = "baz"
+	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserStandbyUserPassword = ""
+
+	// syncGlobsIncludeAndExcludeBoth
+	syncGlobsIncludeAndExcludeBothWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
+		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "syncGlobsIncludeAndExcludeBoth")),
+		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
+	)
+	syncGlobsIncludeAndExcludeBothSettings := mockPluginSettings()
+	syncGlobsIncludeAndExcludeBothSettings.FileBrowserStandbyUrl = "foo.com"
+	syncGlobsIncludeAndExcludeBothSettings.FileBrowserStandbyUsername = "baz"
+	syncGlobsIncludeAndExcludeBothSettings.FileBrowserStandbyUserPassword = "bar"
+
+	syncGlobsIncludeAndExcludeBothSettings.SyncIncludeGlobs = []string{"*.go"}
+	syncGlobsIncludeAndExcludeBothSettings.SyncExcludeGlobs = []string{"*.md"}
 
 	tests := []struct {
 		name           string
@@ -48,9 +109,34 @@ func TestCheckArgsPlugin(t *testing.T) {
 			wantArgFlagNotErr: true,
 		},
 		{
-			name:           "notSupport",
-			woodpeckerInfo: notSupportWoodpeckerInfo,
-			settings:       notSupportSettings,
+			name:           "modeNotSupport",
+			woodpeckerInfo: modeNotSupportWoodpeckerInfo,
+			settings:       modeNotSupportSettings,
+		},
+		{
+			name:           "fileBrowserUrlsNotSetUserName",
+			woodpeckerInfo: fileBrowserUrlsNotSetUserNameWoodpeckerInfo,
+			settings:       fileBrowserUrlsNotSetUserNameSettings,
+		},
+		{
+			name:           "fileBrowserUrlsNotSetUserPassword",
+			woodpeckerInfo: fileBrowserUrlsNotSetUserPasswordWoodpeckerInfo,
+			settings:       fileBrowserUrlsNotSetUserPasswordSettings,
+		},
+		{
+			name:           "fileBrowserStandbyUrlsNotSetUserName",
+			woodpeckerInfo: fileBrowserStandbyUrlsNotSetUserNameWoodpeckerInfo,
+			settings:       fileBrowserStandbyUrlsNotSetUserNameSettings,
+		},
+		{
+			name:           "fileBrowserStandbyUrlsNotSetUserPassword",
+			woodpeckerInfo: fileBrowserStandbyUrlsNotSetUserPasswordWoodpeckerInfo,
+			settings:       fileBrowserStandbyUrlsNotSetUserPasswordSettings,
+		},
+		{
+			name:           "syncGlobsIncludeAndExcludeBoth",
+			woodpeckerInfo: syncGlobsIncludeAndExcludeBothWoodpeckerInfo,
+			settings:       syncGlobsIncludeAndExcludeBothSettings,
 		},
 	}
 
@@ -101,27 +187,6 @@ func TestPlugin(t *testing.T) {
 	)
 	statusSuccessSettings := mockPluginSettings()
 
-	// statusFailure
-	statusFailureWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
-		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "statusFailure")),
-		wd_mock.FastCurrentStatus(wd_info.BuildStatusFailure),
-	)
-	statusFailureSettings := mockPluginSettings()
-
-	// tagPipeline
-	tagPipelineWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
-		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "tagPipeline")),
-		wd_mock.FastTag("v1.0.0", "new tag"),
-	)
-	tagPipelineSettings := mockPluginSettings()
-
-	// pullRequestPipeline
-	pullRequestPipelineWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
-		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "pullRequestPipeline")),
-		wd_mock.FastPullRequest("1", "new pr", "feature-support", "main", "main"),
-	)
-	pullRequestPipelineSettings := mockPluginSettings()
-
 	tests := []struct {
 		name           string
 		woodpeckerInfo wd_info.WoodpeckerInfo
@@ -138,23 +203,6 @@ func TestPlugin(t *testing.T) {
 			name:           "statusSuccess",
 			woodpeckerInfo: statusSuccessWoodpeckerInfo,
 			settings:       statusSuccessSettings,
-		},
-		{
-			name:           "statusFailure",
-			woodpeckerInfo: statusFailureWoodpeckerInfo,
-			settings:       statusFailureSettings,
-			isDryRun:       true,
-		},
-		{
-			name:           "tagPipeline",
-			woodpeckerInfo: tagPipelineWoodpeckerInfo,
-			settings:       tagPipelineSettings,
-			isDryRun:       true,
-		},
-		{
-			name:           "pullRequestPipeline",
-			woodpeckerInfo: pullRequestPipelineWoodpeckerInfo,
-			settings:       pullRequestPipelineSettings,
 			isDryRun:       true,
 		},
 	}
