@@ -1,6 +1,7 @@
 package file_browser_sync_test
 
 import (
+	"github.com/sinlov-go/unittest-kit/unittest_file_kit"
 	"github.com/woodpecker-kit/woodpecker-file-browser-sync/file_browser_sync"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_info"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_log"
@@ -224,6 +225,19 @@ func TestPlugin(t *testing.T) {
 		"**/**/**/*.json",
 	}
 
+	// downloadSome
+	downloadSomeWorkRoot := filepath.Join(testDataPathRoot, "downloadSome")
+	downloadSomeWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
+		wd_mock.FastWorkSpace(downloadSomeWorkRoot),
+		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
+	)
+	downloadSomeSettings := mockPluginSettings()
+	downloadSomeSettings.SyncMode = file_browser_sync.SyncModeDown
+	downloadSomeSettings.SyncWorkSpaceAbsPath = "dist"
+	downloadSomeSettings.SyncIncludeGlobs = []string{
+		"*.json",
+	}
+
 	tests := []struct {
 		name             string
 		woodpeckerInfo   wd_info.WoodpeckerInfo
@@ -244,6 +258,13 @@ func TestPlugin(t *testing.T) {
 			uploadWorkRoot: uploadSomeWorkRoot,
 			isDryRun:       true,
 		},
+		{
+			name:             "downloadSome",
+			woodpeckerInfo:   downloadSomeWoodpeckerInfo,
+			settings:         downloadSomeSettings,
+			downloadWorkRoot: downloadSomeWorkRoot,
+			isDryRun:         true,
+		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
@@ -252,6 +273,13 @@ func TestPlugin(t *testing.T) {
 				errMockFileData := initTestDataForWorkspace(mockRootPath)
 				if errMockFileData != nil {
 					t.Fatal(errMockFileData)
+				}
+			}
+			if tc.downloadWorkRoot != "" {
+				mockRootPath := filepath.Join(tc.downloadWorkRoot, tc.settings.SyncWorkSpaceAbsPath)
+				errNewDownloadPath := unittest_file_kit.Mkdir(mockRootPath)
+				if errNewDownloadPath != nil {
+					t.Fatal(errNewDownloadPath)
 				}
 			}
 			p := mockPluginWithSettings(t, tc.woodpeckerInfo, tc.settings)

@@ -5,6 +5,7 @@ import (
 	"github.com/sinlov/filebrowser-client/file_browser_client"
 	"github.com/sinlov/filebrowser-client/tools/folder"
 	tools "github.com/sinlov/filebrowser-client/tools/str_tools"
+	"github.com/woodpecker-kit/woodpecker-file-browser-sync/internal/path_glob"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_log"
 	"path"
 	"strings"
@@ -120,6 +121,11 @@ func (p *FileBrowserSyncPlugin) doSyncModeUpload() error {
 		fileSendPathList = walkAllByMatchPath
 	}
 
+	if len(fileSendPathList) == 0 {
+		wd_log.Warnf("no file need sync to remote")
+		return nil
+	}
+
 	var fileExcludePathList []string
 	if len(p.Settings.SyncExcludeGlobs) > 0 {
 		wd_log.Debugf("target file want exclude by File Glob: %v", p.Settings.SyncExcludeGlobs)
@@ -209,6 +215,176 @@ func fetchRemotePathByLocalRoot(localAbsPath, localRootPath, remoteRootPath stri
 func (p *FileBrowserSyncPlugin) doSyncModeDown() error {
 	if p.fileBrowserClient == nil {
 		return fmt.Errorf("doSyncModeDown file browser client is nil")
+	}
+
+	errLogin := p.fileBrowserClient.Login()
+	if errLogin != nil {
+		return errLogin
+	}
+
+	remoteResourceRoot, errRemoteResourceRoot := p.fileBrowserClient.ResourcesGet(p.Settings.syncRemoteRootPath)
+	if errRemoteResourceRoot != nil {
+		wd_log.Infof("now find any file at remote root path: %s", p.Settings.syncRemoteRootPath)
+		return nil
+	}
+
+	wd_log.Debugf("remoteResourceRoot NumFiles: %d", remoteResourceRoot.NumFiles)
+	wd_log.Debugf("remoteResourceRoot NumDirs: %d", remoteResourceRoot.NumDirs)
+
+	// findOut RemotePathList
+	var remoteFullFilePathList []string
+	errFetchFilePaths := fetchFileBrowserRemoteFilePathsByRemote(&remoteFullFilePathList, p.fileBrowserClient, p.Settings.syncRemoteRootPath)
+	if errFetchFilePaths != nil {
+		return errFetchFilePaths
+	}
+	wd_log.Debugf("remoteFullFilePathList:\n%s", strings.Join(remoteFullFilePathList, "\n"))
+
+	if len(remoteFullFilePathList) == 0 {
+		wd_log.Infof("no file need sync to local")
+		return nil
+	}
+
+	var totalDownloadRemoteShortPath []string
+
+	if len(p.Settings.SyncIncludeGlobs) == 0 && len(p.Settings.SyncExcludeGlobs) == 0 {
+		var sortFilePaths []string
+		for _, s := range remoteFullFilePathList {
+			left := strings.TrimLeft(s, "/")
+			sortPath := strings.Replace(left, p.Settings.syncRemoteRootPath, "", 1)
+			sortFilePaths = append(sortFilePaths, sortPath)
+		}
+		totalDownloadRemoteShortPath = sortFilePaths
+	} else {
+		if len(p.Settings.SyncIncludeGlobs) > 0 {
+			includeRemotePath, errFindInclude := findIncludeRemotePathByGlob(remoteFullFilePathList, p.Settings.SyncIncludeGlobs, p.Settings.syncRemoteRootPath)
+			if errFindInclude != nil {
+				return errFindInclude
+			}
+			totalDownloadRemoteShortPath = includeRemotePath
+		}
+
+		if len(p.Settings.SyncExcludeGlobs) > 0 {
+			excludeRemotePath, errFindExclude := findExcludeRemotePathByGlob(remoteFullFilePathList, p.Settings.SyncExcludeGlobs, p.Settings.syncRemoteRootPath)
+			if errFindExclude != nil {
+				return errFindExclude
+			}
+			if len(totalDownloadRemoteShortPath) > 0 {
+				for _, excludePath := range excludeRemotePath {
+					for index, downloadPath := range totalDownloadRemoteShortPath {
+						if downloadPath == excludePath {
+							totalDownloadRemoteShortPath = append(totalDownloadRemoteShortPath[:index], totalDownloadRemoteShortPath[index+1:]...)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	errDownload := downloadRemoteByShortPath(p.Settings.syncWorkSpacePath, p.fileBrowserClient, p.Settings.syncRemoteRootPath, totalDownloadRemoteShortPath)
+	if errDownload != nil {
+		return errDownload
+	}
+
+	return nil
+}
+
+func downloadRemoteByShortPath(localRootPath string, client *file_browser_client.FileBrowserClient, remoteRootPath string, downloadPathList []string) error {
+	if len(downloadPathList) == 0 {
+		wd_log.Infof("no file need download to local")
+		return nil
+	}
+	for _, shotPath := range downloadPathList {
+		remoteFullPath := path.Join(remoteRootPath, shotPath)
+		localFullPath := path.Join(localRootPath, shotPath)
+		errDownload := client.ResourceDownload(remoteFullPath, localFullPath, true)
+		if errDownload != nil {
+			return errDownload
+		}
+		wd_log.Debugf("download remote file: %s\nto local: %s", remoteFullPath, localFullPath)
+	}
+	return nil
+}
+
+func findIncludeRemotePathByGlob(list []string, globs []string, rootPath string) ([]string, error) {
+
+	var sortFilePaths []string
+	for _, s := range list {
+		left := strings.TrimLeft(s, "/")
+		sortPath := strings.Replace(left, rootPath, "", 1)
+		sortFilePaths = append(sortFilePaths, sortPath)
+	}
+
+	var matchFilePaths []string
+	for _, glob := range globs {
+		for _, sortPath := range sortFilePaths {
+			// check path is match glob
+			matchGlob, errGlob := path_glob.IsPathMatchGlob(sortPath, glob)
+
+			if matchGlob && errGlob == nil {
+				// remove not match path
+				matchFilePaths = append(matchFilePaths, sortPath)
+			}
+
+		}
+	}
+
+	if len(matchFilePaths) == 0 {
+		return nil, nil
+	}
+
+	return matchFilePaths, nil
+}
+
+func findExcludeRemotePathByGlob(list []string, globs []string, rootPath string) ([]string, error) {
+
+	var sortFilePaths []string
+	for _, s := range list {
+		left := strings.TrimLeft(s, "/")
+		sortPath := strings.Replace(left, rootPath, "", 1)
+		sortFilePaths = append(sortFilePaths, sortPath)
+	}
+
+	var matchFilePaths []string
+	for _, glob := range globs {
+		for _, sortPath := range sortFilePaths {
+			// check path is match glob
+			matchGlob, errGlob := path_glob.IsPathMatchGlob(sortPath, glob)
+
+			if matchGlob || errGlob != nil {
+				// remove not match path
+				matchFilePaths = append(matchFilePaths, sortPath)
+			}
+
+		}
+	}
+
+	if len(matchFilePaths) == 0 {
+		return nil, nil
+	}
+
+	return matchFilePaths, nil
+}
+
+func fetchFileBrowserRemoteFilePathsByRemote(fileList *[]string, client *file_browser_client.FileBrowserClient, path string) error {
+
+	remoteResourceRoot, errRemoteResourceRoot := client.ResourcesGet(path)
+	if errRemoteResourceRoot != nil {
+		return errRemoteResourceRoot
+	}
+
+	if remoteResourceRoot.IsDir {
+		if len(remoteResourceRoot.Items) > 0 {
+			for _, item := range remoteResourceRoot.Items {
+				err := fetchFileBrowserRemoteFilePathsByRemote(fileList, client, item.Path)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	} else {
+		nowList := *fileList
+		nowList = append(nowList, remoteResourceRoot.Path)
+		*fileList = nowList
 	}
 	return nil
 }
