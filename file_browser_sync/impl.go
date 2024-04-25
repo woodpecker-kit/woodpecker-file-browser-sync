@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/sinlov-go/go-common-lib/pkg/string_tools"
 	"github.com/sinlov-go/go-common-lib/pkg/struct_kit"
-	"github.com/woodpecker-kit/woodpecker-tools/wd_flag"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_info"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_log"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_short_info"
@@ -96,10 +95,10 @@ func (p *FileBrowserSyncPlugin) checkArgs() error {
 
 	if len(p.Settings.FileBrowserUrls) > 0 {
 		if p.Settings.FileBrowserUsername == "" {
-			return fmt.Errorf("file browser username must set, now is empty, check flag [ %s ]", CliNameFileBrowserUsernames)
+			return fmt.Errorf("file browser username must set, now is empty, check flag [ %s ]", CliNameFileBrowserUsername)
 		}
 		if p.Settings.FileBrowserUserPassword == "" {
-			return fmt.Errorf("file browser user password must set, now is empty, check flag [ %s ]", CliNameFileBrowserUserPasswords)
+			return fmt.Errorf("file browser user password must set, now is empty, check flag [ %s ]", CliNameFileBrowserUserPassword)
 		}
 	}
 	if p.Settings.FileBrowserStandbyUrl != "" {
@@ -111,7 +110,11 @@ func (p *FileBrowserSyncPlugin) checkArgs() error {
 		}
 	}
 
-	if len(p.Settings.SyncIncludeGlobs) > 0 || len(p.Settings.SyncExcludeGlobs) > 0 {
+	if p.Settings.SyncWorkSpaceAbsPath == "" {
+		return fmt.Errorf("sync work space path must set, now is empty, check flag [ %s ]", CliNameSyncWorkSpacePath)
+	}
+
+	if len(p.Settings.SyncIncludeGlobs) > 0 && len(p.Settings.SyncExcludeGlobs) > 0 {
 		return fmt.Errorf("can not set include and exclude globs both, please remove one")
 	}
 
@@ -141,20 +144,18 @@ func argCheckInArr(mark string, target string, checkArr []string) error {
 //	replace this code with your file_browser_sync implementation
 func (p *FileBrowserSyncPlugin) doBiz() error {
 
-	if p.Settings.DryRun {
-		wd_log.Verbosef("dry run, skip some biz code, more info can open debug by flag [ %s ]", wd_flag.EnvKeyPluginDebug)
-		return nil
+	p.chooseFileBrowserConnect()
+
+	errSyncCheck := p.doSyncCheck()
+	if errSyncCheck != nil {
+		return errSyncCheck
 	}
 
-	// change or remove or this code start
-	//printBasicEnv(p)
-	//if len(p.Settings.NotEmptyEnvKeys) > 0 {
-	//	errCheck := checkEnvNotEmpty(p.Settings.NotEmptyEnvKeys)
-	//	if errCheck != nil {
-	//		return errCheck
-	//	}
-	//}
-	// change or remove or this code end
+	errSyncByFileBrowser := p.doSyncByFileBrowser()
+	if errSyncByFileBrowser != nil {
+		return errSyncByFileBrowser
+	}
+
 	return nil
 }
 

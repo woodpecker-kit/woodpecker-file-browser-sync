@@ -24,6 +24,7 @@ func TestCheckArgsPlugin(t *testing.T) {
 		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
 	successArgsSettings := mockPluginSettings()
+	successArgsSettings.SyncWorkSpaceAbsPath = "data"
 	successArgsSettings.FileBrowserStandbyUrl = "foo.com"
 	successArgsSettings.FileBrowserStandbyUsername = "baz"
 	successArgsSettings.FileBrowserStandbyUserPassword = "bar"
@@ -34,6 +35,7 @@ func TestCheckArgsPlugin(t *testing.T) {
 		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
 	modeNotSupportSettings := mockPluginSettings()
+	modeNotSupportSettings.SyncWorkSpaceAbsPath = "data"
 	modeNotSupportSettings.SyncMode = "not-support"
 
 	// fileBrowserUrlsNotSetUserName
@@ -42,6 +44,7 @@ func TestCheckArgsPlugin(t *testing.T) {
 		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
 	fileBrowserUrlsNotSetUserNameSettings := mockPluginSettings()
+	fileBrowserUrlsNotSetUserNameSettings.SyncWorkSpaceAbsPath = "data"
 	fileBrowserUrlsNotSetUserNameSettings.FileBrowserUrls = []string{"foo.com"}
 	fileBrowserUrlsNotSetUserNameSettings.FileBrowserUsername = ""
 
@@ -51,6 +54,7 @@ func TestCheckArgsPlugin(t *testing.T) {
 		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
 	fileBrowserUrlsNotSetUserPasswordSettings := mockPluginSettings()
+	fileBrowserUrlsNotSetUserPasswordSettings.SyncWorkSpaceAbsPath = "data"
 	fileBrowserUrlsNotSetUserPasswordSettings.FileBrowserUrls = []string{"foo.com"}
 	fileBrowserUrlsNotSetUserPasswordSettings.FileBrowserUsername = "baz"
 	fileBrowserUrlsNotSetUserPasswordSettings.FileBrowserUserPassword = ""
@@ -61,6 +65,7 @@ func TestCheckArgsPlugin(t *testing.T) {
 		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
 	fileBrowserStandbyUrlsNotSetUserNameSettings := mockPluginSettings()
+	fileBrowserStandbyUrlsNotSetUserNameSettings.SyncWorkSpaceAbsPath = "data"
 	fileBrowserStandbyUrlsNotSetUserNameSettings.FileBrowserUrls = []string{"foo.com"}
 	fileBrowserStandbyUrlsNotSetUserNameSettings.FileBrowserUsername = "baz"
 	fileBrowserStandbyUrlsNotSetUserNameSettings.FileBrowserUserPassword = "bar"
@@ -73,6 +78,7 @@ func TestCheckArgsPlugin(t *testing.T) {
 		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
 	fileBrowserStandbyUrlsNotSetUserPasswordSettings := mockPluginSettings()
+	fileBrowserStandbyUrlsNotSetUserPasswordSettings.SyncWorkSpaceAbsPath = "data"
 	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserUrls = []string{"foo.com"}
 	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserUsername = "baz"
 	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserUserPassword = "bar"
@@ -80,12 +86,27 @@ func TestCheckArgsPlugin(t *testing.T) {
 	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserStandbyUsername = "baz"
 	fileBrowserStandbyUrlsNotSetUserPasswordSettings.FileBrowserStandbyUserPassword = ""
 
+	// notSetSyncWorkSpacePath
+	notSetSyncWorkSpacePathWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
+		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "notSetSyncWorkSpacePath")),
+		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
+	)
+	notSetSyncWorkSpacePathSettings := mockPluginSettings()
+	notSetSyncWorkSpacePathSettings.SyncWorkSpaceAbsPath = ""
+	notSetSyncWorkSpacePathSettings.FileBrowserUrls = []string{"foo.com"}
+	notSetSyncWorkSpacePathSettings.FileBrowserUsername = "baz"
+	notSetSyncWorkSpacePathSettings.FileBrowserUserPassword = "bar"
+	notSetSyncWorkSpacePathSettings.FileBrowserStandbyUrl = "foo.com"
+	notSetSyncWorkSpacePathSettings.FileBrowserStandbyUsername = "baz"
+	notSetSyncWorkSpacePathSettings.FileBrowserStandbyUserPassword = "some"
+
 	// syncGlobsIncludeAndExcludeBoth
 	syncGlobsIncludeAndExcludeBothWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
 		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "syncGlobsIncludeAndExcludeBoth")),
 		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
 	syncGlobsIncludeAndExcludeBothSettings := mockPluginSettings()
+	syncGlobsIncludeAndExcludeBothSettings.SyncWorkSpaceAbsPath = "data"
 	syncGlobsIncludeAndExcludeBothSettings.FileBrowserStandbyUrl = "foo.com"
 	syncGlobsIncludeAndExcludeBothSettings.FileBrowserStandbyUsername = "baz"
 	syncGlobsIncludeAndExcludeBothSettings.FileBrowserStandbyUserPassword = "bar"
@@ -134,6 +155,11 @@ func TestCheckArgsPlugin(t *testing.T) {
 			settings:       fileBrowserStandbyUrlsNotSetUserPasswordSettings,
 		},
 		{
+			name:           "notSetSyncWorkSpacePath",
+			woodpeckerInfo: notSetSyncWorkSpacePathWoodpeckerInfo,
+			settings:       notSetSyncWorkSpacePathSettings,
+		},
+		{
 			name:           "syncGlobsIncludeAndExcludeBoth",
 			woodpeckerInfo: syncGlobsIncludeAndExcludeBothWoodpeckerInfo,
 			settings:       syncGlobsIncludeAndExcludeBothSettings,
@@ -180,18 +206,30 @@ func TestPlugin(t *testing.T) {
 		t.Fatal(errTestDataPathRoot)
 	}
 
-	// statusSuccess
-	statusSuccessWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
-		wd_mock.FastWorkSpace(filepath.Join(testDataPathRoot, "statusSuccess")),
+	// uploadSom
+	uploadSomeWorkRoot := filepath.Join(testDataPathRoot, "uploadSome")
+	uploadSomeWoodpeckerInfo := *wd_mock.NewWoodpeckerInfo(
+		wd_mock.FastWorkSpace(uploadSomeWorkRoot),
 		wd_mock.FastCurrentStatus(wd_info.BuildStatusSuccess),
 	)
-	statusSuccessSettings := mockPluginSettings()
+	uploadSomeSettings := mockPluginSettings()
+	uploadSomeSettings.SyncMode = file_browser_sync.SyncModeUpload
+	uploadSomeSettings.SyncWorkSpaceAbsPath = "dist"
+	uploadSomeSettings.SyncExcludeGlobs = []string{
+		"**/*.md",
+		"**/**/*.md",
+		"*.apk",
+		"**/*.json",
+		"**/**/*.json",
+		"**/**/**/*.json",
+	}
 
 	tests := []struct {
-		name           string
-		woodpeckerInfo wd_info.WoodpeckerInfo
-		settings       file_browser_sync.Settings
-		workRoot       string
+		name             string
+		woodpeckerInfo   wd_info.WoodpeckerInfo
+		settings         file_browser_sync.Settings
+		uploadWorkRoot   string
+		downloadWorkRoot string
 
 		ossTransferKey  string
 		ossTransferData interface{}
@@ -200,14 +238,22 @@ func TestPlugin(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			name:           "statusSuccess",
-			woodpeckerInfo: statusSuccessWoodpeckerInfo,
-			settings:       statusSuccessSettings,
+			name:           "uploadSome",
+			woodpeckerInfo: uploadSomeWoodpeckerInfo,
+			settings:       uploadSomeSettings,
+			uploadWorkRoot: uploadSomeWorkRoot,
 			isDryRun:       true,
 		},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
+			if tc.uploadWorkRoot != "" {
+				mockRootPath := filepath.Join(tc.uploadWorkRoot, tc.settings.SyncWorkSpaceAbsPath)
+				errMockFileData := initTestDataForWorkspace(mockRootPath)
+				if errMockFileData != nil {
+					t.Fatal(errMockFileData)
+				}
+			}
 			p := mockPluginWithSettings(t, tc.woodpeckerInfo, tc.settings)
 			p.Settings.DryRun = tc.isDryRun
 			if tc.ossTransferKey != "" {

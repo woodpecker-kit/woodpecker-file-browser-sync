@@ -4,8 +4,11 @@ const (
 	TimeoutSecondMinimum     = 10
 	SyncTimeoutSecondMinimum = 60
 
-	SyncModeSync = "upload"
-	SyncModeDown = "download"
+	TryConnectTimeoutSecond = 5
+	TryConnectRetries       = 3
+
+	SyncModeUpload = "upload"
+	SyncModeDown   = "download"
 
 	SyncFileBrowseRemoteRootPath = ".sync"
 )
@@ -30,9 +33,14 @@ type (
 		FileBrowserStandbyUsername     string
 		FileBrowserStandbyUserPassword string
 
+		usedFileBrowserUrl          string
+		usedFileBrowserUsername     string
+		usedFileBrowserUserPassword string
+
 		SyncWorkSpaceAbsPath string
 
-		syncWorkSpacePath string // this path will append to RootPath
+		syncWorkSpacePath  string // this path will append to RootPath
+		syncRemoteRootPath string // this path will append to remote root path
 
 		SyncIncludeGlobs []string
 		SyncExcludeGlobs []string
@@ -43,7 +51,7 @@ type (
 
 var (
 	syncModeSupport = []string{
-		SyncModeSync,
+		SyncModeUpload,
 		SyncModeDown,
 	}
 )

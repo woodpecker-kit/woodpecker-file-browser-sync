@@ -43,8 +43,8 @@ var (
 	// mustSetArgsAsEnvList
 	mustSetArgsAsEnvList = []string{
 		file_browser_sync.EnvFileBrowserUrls,
-		file_browser_sync.EnvFileBrowserUsernames,
-		file_browser_sync.EnvFileBrowserUserPasswords,
+		file_browser_sync.EnvFileBrowserUsername,
+		file_browser_sync.EnvFileBrowserUserPassword,
 	}
 
 	valEnvTimeoutSecond                   uint
@@ -75,8 +75,8 @@ func init() {
 
 	valEnvSyncMode = env_kit.FetchOsEnvStr(file_browser_sync.EnvSyncMode, file_browser_sync.SyncModeDown)
 	valEnvFileBrowserUrls = env_kit.FetchOsEnvStringSlice(file_browser_sync.EnvFileBrowserUrls)
-	valEnvFileBrowserUsernames = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserUsernames, "")
-	valEnvFileBrowserUserPasswords = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserUserPasswords, "")
+	valEnvFileBrowserUsernames = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserUsername, "")
+	valEnvFileBrowserUserPasswords = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserUserPassword, "")
 	valEnvFileBrowserStandbyUrl = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserStandbyUrl, "")
 	varEnvFileBrowserStandbyUsernames = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserStandbyUsername, "")
 	valEnvFileBrowserStandbyUserPasswords = env_kit.FetchOsEnvStr(file_browser_sync.EnvFileBrowserStandbyUserPassword, "")

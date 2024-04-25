@@ -3,7 +3,7 @@ package file_browser_sync
 import "time"
 
 const (
-	minimumTimeoutSecond = 5
+	minimumTimeoutSecond = 3
 	minimumRetries       = 3
 	defaultConcurrency   = 10
 )

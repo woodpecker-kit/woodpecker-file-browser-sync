@@ -17,11 +17,11 @@ const (
 	CliNameFileBrowserUrls = "settings.file-browser-urls"
 	EnvFileBrowserUrls     = "PLUGIN_FILE_BROWSER_URLS"
 
-	CliNameFileBrowserUsernames = "settings.file-browser-usernames"
-	EnvFileBrowserUsernames     = "PLUGIN_FILE_BROWSER_USERNAMES"
+	CliNameFileBrowserUsername = "settings.file-browser-username"
+	EnvFileBrowserUsername     = "PLUGIN_FILE_BROWSER_USERNAME"
 
-	CliNameFileBrowserUserPasswords = "settings.file-browser-user-passwords"
-	EnvFileBrowserUserPasswords     = "PLUGIN_FILE_BROWSER_USER_PASSWORDS"
+	CliNameFileBrowserUserPassword = "settings.file-browser-user-password"
+	EnvFileBrowserUserPassword     = "PLUGIN_FILE_BROWSER_USER_PASSWORD"
 
 	CliNameFileBrowserStandbyUrl = "settings.file-browser-standby-url"
 	EnvFileBrowserStandbyUrl     = "PLUGIN_FILE_BROWSER_STANDBY_URL"
@@ -62,14 +62,14 @@ func GlobalFlag() []cli.Flag {
 			EnvVars: []string{EnvFileBrowserUrls},
 		},
 		&cli.StringFlag{
-			Name:    CliNameFileBrowserUsernames,
+			Name:    CliNameFileBrowserUsername,
 			Usage:   "set file browser username for multi urls",
-			EnvVars: []string{EnvFileBrowserUsernames},
+			EnvVars: []string{EnvFileBrowserUsername},
 		},
 		&cli.StringFlag{
-			Name:    CliNameFileBrowserUserPasswords,
+			Name:    CliNameFileBrowserUserPassword,
 			Usage:   "set file browser user password for multi urls",
-			EnvVars: []string{EnvFileBrowserUserPasswords},
+			EnvVars: []string{EnvFileBrowserUserPassword},
 		},
 		&cli.StringFlag{
 			Name:    CliNameFileBrowserStandbyUrl,
@@ -144,8 +144,8 @@ func BindCliFlags(c *cli.Context,
 		SyncMode: c.String(CliNameSyncMode),
 
 		FileBrowserUrls:         c.StringSlice(CliNameFileBrowserUrls),
-		FileBrowserUsername:     c.String(CliNameFileBrowserUsernames),
-		FileBrowserUserPassword: c.String(CliNameFileBrowserUserPasswords),
+		FileBrowserUsername:     c.String(CliNameFileBrowserUsername),
+		FileBrowserUserPassword: c.String(CliNameFileBrowserUserPassword),
 
 		FileBrowserStandbyUrl:          c.String(CliNameFileBrowserStandbyUrl),
 		FileBrowserStandbyUsername:     c.String(CliNameFileBrowserStandbyUsername),
