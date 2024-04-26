@@ -11,6 +11,9 @@ import (
 )
 
 const (
+	CliNameSyncDryRun = "settings.sync-dry-run"
+	EnvSyncDryRun     = "PLUGIN_SYNC_DRY_RUN"
+
 	CliNameSyncMode = "settings.sync-mode"
 	EnvSyncMode     = "PLUGIN_SYNC_MODE"
 
@@ -40,9 +43,6 @@ const (
 
 	CliNameSyncExcludeGlobs = "settings.sync-exclude-globs"
 	EnvSyncExcludeGlobs     = "PLUGIN_SYNC_EXCLUDE_GLOBS"
-
-	CliNameSyncDryRun = "settings.sync-dry-run"
-	EnvSyncDryRun     = "PLUGIN_SYNC_DRY_RUN"
 )
 
 // GlobalFlag
@@ -50,12 +50,18 @@ const (
 func GlobalFlag() []cli.Flag {
 	return []cli.Flag{
 
+		&cli.BoolFlag{
+			Name:    CliNameSyncDryRun,
+			Usage:   "dry run, only print some info, not real sync",
+			EnvVars: []string{EnvSyncDryRun},
+		},
 		&cli.StringFlag{
 			Name:    CliNameSyncMode,
 			Usage:   fmt.Sprintf("set sync mode, support: %s", strings.Join(syncModeSupport, ", ")),
 			Value:   SyncModeDown,
 			EnvVars: []string{EnvSyncMode},
 		},
+
 		&cli.StringSliceFlag{
 			Name:    CliNameFileBrowserUrls,
 			Usage:   "set file browser support multi urls, will auto switch host fast, if not set or host not work, will use standby url",
@@ -86,6 +92,7 @@ func GlobalFlag() []cli.Flag {
 			Usage:   "set file browser user password for standby url",
 			EnvVars: []string{EnvFileBrowserStandbyUserPassword},
 		},
+
 		&cli.StringFlag{
 			Name:    CliNameSyncWorkSpacePath,
 			Usage:   "sync path under workspace path, Required",
@@ -100,11 +107,6 @@ func GlobalFlag() []cli.Flag {
 			Name:    CliNameSyncExcludeGlobs,
 			Usage:   "sync exclude globs",
 			EnvVars: []string{EnvSyncExcludeGlobs},
-		},
-		&cli.BoolFlag{
-			Name:    CliNameSyncDryRun,
-			Usage:   "dry run, only print some info, not real sync",
-			EnvVars: []string{EnvSyncDryRun},
 		},
 	}
 }

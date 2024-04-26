@@ -28,20 +28,20 @@ icon: https://raw.githubusercontent.com/woodpecker-kit/woodpecker-file-browser-s
 
 ## Settings
 
-| Name                            | Required | Default value | Description                                                       |
-|---------------------------------|----------|---------------|-------------------------------------------------------------------|
-| `debug`                         | **no**   | *false*       | open debug log or open by env `PLUGIN_DEBUG`                      |
-| `sync-dry-run`                  | **no**   | *false*       | dry run, only print some info, not real sync                      |
-| `file-browser-urls`             | **yes**  |               | file browser urls, support multi urls, will auto switch host fast |
-| `file-browser-username`         | **yes**  |               | file browser username, support from secret                        |
-| `file-browser-password`         | **yes**  |               | file browser password, support from secret                        |
-| `file-browser-standby-url`      | **yes**  |               | file browser standby url, if multi urls not work, will use this   |
-| `file-browser-standby-username` | **yes**  |               | file browser standby username, support from secret                |
-| `file-browser-standby-password` | **yes**  |               | file browser standby password, support from secret                |
-| `sync-mode`                     | **yes**  |               | sync mode, support: upload, download                              |
-| `sync-work-space-path`          | **yes**  |               | sync path under workspace path                                    |
-| `sync-include-globs`            | **no**   |               | include globs do not use with exclude globs                       |
-| `sync-exclude-globs`            | **no**   |               | exclude globs do not use with include globs                       |
+| Name                                  | Required | Default value | Description                                                       |
+|---------------------------------------|----------|---------------|-------------------------------------------------------------------|
+| `debug`                               | **no**   | *false*       | open debug log or open by env `PLUGIN_DEBUG`                      |
+| `sync-dry-run`                        | **no**   | *false*       | dry run, only print some info, not real sync                      |
+| `file-browser-urls`                   | **yes**  |               | file browser urls, support multi urls, will auto switch host fast |
+| `file-browser-username`               | **yes**  |               | file browser username, support from secret                        |
+| `file-browser-user-password`          | **yes**  |               | file browser password, support from secret                        |
+| `file-browser-standby-url`            | **yes**  |               | file browser standby url, if multi urls not work, will use this   |
+| `file-browser-standby-username`       | **yes**  |               | file browser standby username, support from secret                |
+| `file-browser-standby-user-passwords` | **yes**  |               | file browser standby password, support from secret                |
+| `sync-mode`                           | **yes**  |               | sync mode, support: upload, download                              |
+| `sync-work-space-path`                | **yes**  |               | sync path under workspace path                                    |
+| `sync-include-globs`                  | **no**   |               | include globs do not use with exclude globs                       |
+| `sync-exclude-globs`                  | **no**   |               | exclude globs do not use with include globs                       |
 
 **Hide Settings:**
 
@@ -73,13 +73,13 @@ steps:
         - https://filebrowser-zone.example.com
       file-browser-username:
         from_secret: file_browser_sync_username
-      file-browser-password:
+      file-browser-user-password:
         from_secret: file_browser_sync_password
       # standby url
       file-browser-standby-url: https://filebrowser-standby.example.com
       file-browser-standby-username:
         from_secret: file_browser_sync_standby_username
-      file-browser-standby-password:
+      file-browser-standby-user-passwords:
         from_secret: file_browser_sync_standby_password
       ## sync config
       sync-work-space-path: dist # sync path under workspace path, Required
@@ -119,13 +119,13 @@ steps:
         - https://filebrowser-zone.example.com
       file-browser-username:
         from_secret: file_browser_sync_username
-      file-browser-password:
+      file-browser-user-password:
         from_secret: file_browser_sync_password
       # standby url
       file-browser-standby-url: https://filebrowser-standby.example.com
       file-browser-standby-username:
         from_secret: file_browser_sync_standby_username
-      file-browser-standby-password:
+      file-browser-standby-user-passwords:
         from_secret: file_browser_sync_standby_password
       ## sync config
       sync-work-space-path: dist # sync path under workspace path, Required
@@ -155,13 +155,13 @@ steps:
         - https://filebrowser-zone.example.com
       file-browser-username:
         from_secret: file_browser_sync_username
-      file-browser-password:
+      file-browser-user-password:
         from_secret: file_browser_sync_password
       # standby url
       file-browser-standby-url: https://filebrowser-standby.example.com
       file-browser-standby-username:
         from_secret: file_browser_sync_standby_username
-      file-browser-standby-password:
+      file-browser-standby-user-passwords:
         from_secret: file_browser_sync_standby_password
       ## sync config
       sync-work-space-path: dist # sync path under workspace path, Required
@@ -203,10 +203,10 @@ steps:
         - https://filebrowser-inner.example.com
         - https://filebrowser.example.com
         - https://filebrowser-zone.example.com
-      file-browser-password:
+      file-browser-user-password:
         from_secret: file_browser_sync_password
       # standby url
-      file-browser-standby-password:
+      file-browser-standby-user-passwords:
         from_secret: file_browser_sync_standby_password
       ## sync config
       sync-work-space-path: dist # sync path under workspace path, Required
