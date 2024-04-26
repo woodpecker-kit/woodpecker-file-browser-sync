@@ -1,7 +1,7 @@
 package file_browser_sync_test
 
 import (
-	"github.com/sinlov-go/unittest-kit/unittest_file_kit"
+	"github.com/sinlov-go/go-common-lib/pkg/filepath_plus"
 	"github.com/woodpecker-kit/woodpecker-file-browser-sync/file_browser_sync"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_info"
 	"github.com/woodpecker-kit/woodpecker-tools/wd_log"
@@ -276,10 +276,11 @@ func TestPlugin(t *testing.T) {
 				}
 			}
 			if tc.downloadWorkRoot != "" {
-				mockRootPath := filepath.Join(tc.downloadWorkRoot, tc.settings.SyncWorkSpaceAbsPath)
-				errNewDownloadPath := unittest_file_kit.Mkdir(mockRootPath)
-				if errNewDownloadPath != nil {
-					t.Fatal(errNewDownloadPath)
+				downloadWorkRoot := filepath.Join(tc.downloadWorkRoot, tc.settings.SyncWorkSpaceAbsPath)
+				t.Logf("downloadWorkRoot: %s", downloadWorkRoot)
+				errRemove := filepath_plus.RmDir(downloadWorkRoot, true)
+				if errRemove != nil {
+					t.Fatalf("remove downloadWorkRoot error: %v", errRemove)
 				}
 			}
 			p := mockPluginWithSettings(t, tc.woodpeckerInfo, tc.settings)
