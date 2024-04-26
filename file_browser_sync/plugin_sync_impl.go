@@ -147,7 +147,7 @@ func (p *FileBrowserSyncPlugin) doSyncModeUpload() error {
 			isExistSend := ""
 			for _, excludePath := range fileExcludePathList {
 				if sendPath == excludePath {
-					wd_log.Infof("find out exclude file path: %s", excludePath)
+					wd_log.Debugf("find out exclude file path: %s", excludePath)
 					isExistSend = excludePath
 					continue
 				}
@@ -170,7 +170,19 @@ func (p *FileBrowserSyncPlugin) doSyncModeUpload() error {
 	}
 
 	if p.Settings.DryRun {
-		wd_log.Infof("dry run mode, skip sync file to remote")
+		wd_log.Infof("dry run mode, skip sync file upload to remote")
+		wd_log.Infof("local sync upload root path  : %s", p.Settings.SyncWorkSpaceAbsPath)
+		wd_log.Infof("remote upload file root path : %s", p.Settings.syncRemoteRootPath)
+		if len(fileSendPathList) == 0 {
+			wd_log.Infof("no file need download to local")
+			return nil
+		}
+		var absPathList []string
+		for _, fullPath := range fileSendPathList {
+			shortPath := strings.TrimLeft(fullPath, p.Settings.syncWorkSpacePath)
+			absPathList = append(absPathList, shortPath)
+		}
+		wd_log.Infof("want send file path:\n%s", strings.Join(absPathList, "\n"))
 		return nil
 	}
 
@@ -229,7 +241,7 @@ func (p *FileBrowserSyncPlugin) doSyncModeDown() error {
 	}
 
 	wd_log.Debugf("remoteResourceRoot NumFiles: %d", remoteResourceRoot.NumFiles)
-	wd_log.Debugf("remoteResourceRoot NumDirs: %d", remoteResourceRoot.NumDirs)
+	wd_log.Debugf("remoteResourceRoot NumDirs : %d", remoteResourceRoot.NumDirs)
 
 	// findOut RemotePathList
 	var remoteFullFilePathList []string
@@ -240,7 +252,7 @@ func (p *FileBrowserSyncPlugin) doSyncModeDown() error {
 	wd_log.Debugf("remoteFullFilePathList:\n%s", strings.Join(remoteFullFilePathList, "\n"))
 
 	if len(remoteFullFilePathList) == 0 {
-		wd_log.Infof("no file need sync to local")
+		wd_log.Infof("no file need sync to local at remote root path: %s", p.Settings.syncRemoteRootPath)
 		return nil
 	}
 
@@ -278,6 +290,23 @@ func (p *FileBrowserSyncPlugin) doSyncModeDown() error {
 				}
 			}
 		}
+	}
+
+	if p.Settings.DryRun {
+		wd_log.Infof("dry run mode, skip sync file download to local")
+		wd_log.Infof("local sync download root path  : %s", p.Settings.SyncWorkSpaceAbsPath)
+		wd_log.Infof("remote download file root path : %s", p.Settings.syncRemoteRootPath)
+		if len(totalDownloadRemoteShortPath) == 0 {
+			wd_log.Infof("no file need download to local")
+			return nil
+		}
+		var absPathList []string
+		for _, fullPath := range totalDownloadRemoteShortPath {
+			shortPath := strings.TrimLeft(fullPath, p.Settings.syncWorkSpacePath)
+			absPathList = append(absPathList, shortPath)
+		}
+		wd_log.Infof("want send file path:\n%s", strings.Join(absPathList, "\n"))
+		return nil
 	}
 
 	errDownload := downloadRemoteByShortPath(p.Settings.syncWorkSpacePath, p.fileBrowserClient, p.Settings.syncRemoteRootPath, totalDownloadRemoteShortPath)

@@ -11,7 +11,7 @@
 
 ## for what
 
-- this project used to woodpecker plugin
+- file sync for woodpecker-ci use https://github.com/filebrowser/filebrowser
 
 ## Contributing
 
@@ -26,25 +26,21 @@ Please read [Contributor Guide](.github/CONTRIBUTING_DOC/CONTRIBUTING.md) for mo
 
 ## Features
 
+- [x] sync as [github.com/filebrowser/filebrowser](https://github.com/filebrowser/filebrowser)
+    - local path will sync to remote path graph `{.sync}/${repo-Hostname}/${repo-Owner}/${repo-Name}/{build-number}`
+
+- [x] support link choose by web test
+    - [x] `file-browser-urls` support multi urls, will auto switch host fast
+    - [x] `file-browser-standby-url` if multi urls not work, will use this
+
+- [x] support `dry-run` mode
+- [x] support sync mode `download` and `upload`
+    - each mode support `sync-include-globs` and `sync-exclude-globs`
+
 - [ ] more perfect test case coverage
 - [ ] more perfect benchmark case
 
 ## usage
-
-- use this template, replace list below and add usage
-    - `github.com/woodpecker-kit/woodpecker-file-browser-sync` to your package name
-    - `woodpecker-kit` to your owner name
-    - `woodpecker-file-browser-sync` to your project name
-
-- use github action for this workflow push to docker hub, must add
-    - variables `ENV_DOCKERHUB_OWNER` user of docker hub
-    - variables `ENV_DOCKERHUB_REPO_NAME` repo name of docker hub
-    - secrets `DOCKERHUB_TOKEN` token of docker hub user from [hub.docker](https://hub.docker.com/settings/security)
-
-- check `docker-bake.hcl` config, change to your docker image
-
-- if you use `wd_steps_transfer` just add `.woodpecker_kit.steps.transfer` at git ignore
-- change code start with `// change or remove`
 
 ### workflow usage
 

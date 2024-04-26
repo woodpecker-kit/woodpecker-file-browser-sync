@@ -73,7 +73,7 @@ func GlobalFlag() []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:    CliNameFileBrowserStandbyUrl,
-			Usage:   "set file browser standby url, if  multi urls not work, will use this",
+			Usage:   "set file browser standby url, if multi urls not work, will use this",
 			EnvVars: []string{EnvFileBrowserStandbyUrl},
 		},
 		&cli.StringFlag{
@@ -88,7 +88,7 @@ func GlobalFlag() []cli.Flag {
 		},
 		&cli.StringFlag{
 			Name:    CliNameSyncWorkSpacePath,
-			Usage:   "sync path under workspace path",
+			Usage:   "sync path under workspace path, Required",
 			EnvVars: []string{EnvSyncWorkSpacePath},
 		},
 		&cli.StringSliceFlag{
@@ -118,7 +118,7 @@ func HideGlobalFlag() []cli.Flag {
 	return []cli.Flag{
 		&cli.UintFlag{
 			Name:    CliNameFileBrowserSyncTimeoutSecond,
-			Usage:   "file browser sync timeout second",
+			Usage:   "file browser sync files timeout second, minimum 60s",
 			Hidden:  true,
 			EnvVars: []string{EnvFileBrowserSyncTimeoutSecond},
 		},
