@@ -56,6 +56,10 @@ icon: https://raw.githubusercontent.com/woodpecker-kit/woodpecker-file-browser-s
 
 - workflow with backend `docker`
 
+[![docker hub version semver](https://img.shields.io/docker/v/sinlov/woodpecker-file-browser-sync?sort=semver)](https://hub.docker.com/r/sinlov/woodpecker-file-browser-sync/tags?page=1&ordering=last_updated)
+[![docker hub image size](https://img.shields.io/docker/image-size/sinlov/woodpecker-file-browser-sync)](https://hub.docker.com/r/sinlov/woodpecker-file-browser-sync)
+[![docker hub image pulls](https://img.shields.io/docker/pulls/sinlov/woodpecker-file-browser-sync)](https://hub.docker.com/r/sinlov/woodpecker-file-browser-sync/tags?page=1&ordering=last_updated)
+
 ```yml
 labels:
   backend: docker
@@ -96,6 +100,9 @@ steps:
 ```bash
 go install -a github.com/woodpecker-kit/woodpecker-file-browser-sync/cmd/woodpecker-file-browser-sync@latest
 ```
+
+[![GitHub latest SemVer tag)](https://img.shields.io/github/v/tag/woodpecker-kit/woodpecker-file-browser-sync)](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/tags)
+[![GitHub release)](https://img.shields.io/github/v/release/woodpecker-kit/woodpecker-file-browser-sync)](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/releases)
 
 - install at ${GOPATH}/bin, v1.0.0
 
