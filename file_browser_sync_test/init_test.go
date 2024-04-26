@@ -37,7 +37,7 @@ var (
 	//  for check set in CI env not empty
 	mustSetInCiEnvList = []string{
 		wd_flag.EnvKeyCiSystemPlatform,
-		wd_flag.EnvKeyCiSystemVersion,
+		//wd_flag.EnvKeyCiSystemVersion,
 	}
 
 	// mustSetArgsAsEnvList
