@@ -283,7 +283,7 @@ func TestPlugin(t *testing.T) {
 				}
 			}
 			p := mockPluginWithSettings(t, tc.woodpeckerInfo, tc.settings)
-			p.Settings.DryRun = tc.isDryRun
+			//p.Settings.DryRun = tc.isDryRun
 			if tc.ossTransferKey != "" {
 				errGenTransferData := generateTransferStepsOut(
 					p,

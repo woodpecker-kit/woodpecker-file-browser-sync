@@ -174,7 +174,7 @@ func (p *FileBrowserSyncPlugin) doSyncModeUpload() error {
 		wd_log.Infof("local sync upload root path  : %s", p.Settings.SyncWorkSpaceAbsPath)
 		wd_log.Infof("remote upload file root path : %s", p.Settings.syncRemoteRootPath)
 		if len(fileSendPathList) == 0 {
-			wd_log.Infof("no file need download to local")
+			wd_log.Infof("no file need upload to remote")
 			return nil
 		}
 		var absPathList []string
@@ -186,33 +186,28 @@ func (p *FileBrowserSyncPlugin) doSyncModeUpload() error {
 		return nil
 	}
 
+	if len(fileSendPathList) == 0 {
+		wd_log.Infof("no file need upload to remote")
+		return nil
+	}
+
 	errLogin := p.fileBrowserClient.Login()
 	if errLogin != nil {
 		return errLogin
 	}
 
-	if len(fileSendPathList) == 1 {
-		localFileAbsPath := fileSendPathList[0]
-		remotePath := fetchRemotePathByLocalRoot(localFileAbsPath, p.Settings.syncWorkSpacePath, p.Settings.syncRemoteRootPath)
-		var resourcePostOne = file_browser_client.ResourcePostFile{
-			LocalFilePath:  localFileAbsPath,
-			RemoteFilePath: remotePath,
+	for _, item := range fileSendPathList {
+		var resourcePost = file_browser_client.ResourcePostFile{
+			LocalFilePath:  item,
+			RemoteFilePath: fetchRemotePathByLocalRoot(item, p.Settings.syncWorkSpacePath, p.Settings.syncRemoteRootPath),
 		}
-		errSendOneFile := p.fileBrowserClient.ResourcesPostFile(resourcePostOne, p.Settings.Debug)
+		errSendOneFile := p.fileBrowserClient.ResourcesPostFile(resourcePost, true)
 		if errSendOneFile != nil {
 			return errSendOneFile
 		}
-	} else {
-		for _, item := range fileSendPathList {
-			var resourcePost = file_browser_client.ResourcePostFile{
-				LocalFilePath:  item,
-				RemoteFilePath: fetchRemotePathByLocalRoot(item, p.Settings.syncWorkSpacePath, p.Settings.syncRemoteRootPath),
-			}
-			errSendOneFile := p.fileBrowserClient.ResourcesPostFile(resourcePost, p.Settings.Debug)
-			if errSendOneFile != nil {
-				return errSendOneFile
-			}
-		}
+		shortPath := strings.TrimLeft(item, p.Settings.syncWorkSpacePath)
+		wd_log.Debugf("-> send file: %s\nto remote: %s", shortPath, resourcePost.RemoteFilePath)
+		wd_log.Infof("-> send file: %s\nto remote: %s", shortPath, resourcePost.RemoteFilePath)
 	}
 
 	return nil
@@ -305,10 +300,11 @@ func (p *FileBrowserSyncPlugin) doSyncModeDown() error {
 			shortPath := strings.TrimLeft(fullPath, p.Settings.syncWorkSpacePath)
 			absPathList = append(absPathList, shortPath)
 		}
-		wd_log.Infof("want send file path:\n%s", strings.Join(absPathList, "\n"))
+		wd_log.Infof("want dowload file path:\n%s", strings.Join(absPathList, "\n"))
 		return nil
 	}
 
+	wd_log.Infof("-> download remote file to workspace abs path: %s", p.Settings.SyncWorkSpaceAbsPath)
 	errDownload := downloadRemoteByShortPath(p.Settings.syncWorkSpacePath, p.fileBrowserClient, p.Settings.syncRemoteRootPath, totalDownloadRemoteShortPath)
 	if errDownload != nil {
 		return errDownload
@@ -329,7 +325,9 @@ func downloadRemoteByShortPath(localRootPath string, client *file_browser_client
 		if errDownload != nil {
 			return errDownload
 		}
-		wd_log.Debugf("download remote file: %s\nto local: %s", remoteFullPath, localFullPath)
+		showInWsPath := strings.TrimLeft(shotPath, "/")
+		wd_log.Debugf("-> download remote file: %s\nto local: %s", remoteFullPath, showInWsPath)
+		wd_log.Infof("download to abs path: %s", showInWsPath)
 	}
 	return nil
 }
