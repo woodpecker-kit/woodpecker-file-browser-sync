@@ -10,13 +10,13 @@ require (
 	github.com/sinlov-go/unittest-kit v1.2.1
 	github.com/sinlov/filebrowser-client v0.7.2
 	github.com/stretchr/testify v1.9.0
-	github.com/urfave/cli/v2 v2.27.4
+	github.com/urfave/cli/v2 v2.27.5
 	github.com/woodpecker-kit/woodpecker-tools v1.20.0
 )
 
 require (
 	github.com/chainguard-dev/git-urls v1.0.2 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/monaco-io/request v1.0.16 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
