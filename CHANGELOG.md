@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [convention-change-log](https://github.com/convention-change/convention-change-log) for commit guidelines.
 
+## [1.1.0](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/compare/1.0.0...v1.1.0) (2024-12-21)
+
+### ✨ Features
+
+* update Go version to 1.21 ([ae4721b6](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/ae4721b62b90d94bec6233939d8f1fd5919c15c1)), re [#23](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/issues/23)
+
+### 📝 Documentation
+
+* update contributing guidelines and code of conduct ([71f418c0](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/71f418c08038b12583ff4b8a7e6a2c533a87b943))
+
+### 👷‍ Build System
+
+* bump github.com/woodpecker-kit/woodpecker-tools ([eff952c8](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/eff952c81b514355c0e2045007fce94c6d4f5730))
+
+* update GitHub release action to v2 ([d95740c0](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/d95740c0b9e9ae14d0aa9b35fb64e55625edce6d))
+
+* bump github.com/Masterminds/semver/v3 from 3.3.0 to 3.3.1 ([8dd23fee](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/8dd23fee0b8200bab111d6e6e8f5810aa74757d5))
+
+* bump github.com/urfave/cli/v2 from 2.27.4 to 2.27.5 ([80df0e87](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/80df0e8769990bd018518bca8b4da58dd4f97136))
+
+* bump github.com/sinlov-go/unittest-kit from 1.1.1 to 1.2.1 ([3e4d2939](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/3e4d29397bd2cd9cfe1c85321b31f88709d0fcf1))
+
+* bump github.com/Masterminds/semver/v3 from 3.2.1 to 3.3.0 ([1236dbb1](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/1236dbb1326ac97c409685d8ec03877f7cb73e2a))
+
+* bump github.com/sinlov-go/go-common-lib from 1.7.0 to 1.7.1 ([15e7f703](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/15e7f70391e062446f61afbbbdda31d13c6638e2))
+
+* bump github.com/sinlov-go/unittest-kit from 1.1.0 to 1.1.1 ([69c4f9ca](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/69c4f9caa6a978de44cd4050aed751d9e8981a78))
+
+* bump github.com/urfave/cli/v2 from 2.27.3 to 2.27.4 ([cef4e778](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/cef4e7785da61ad3f9a3f5eb709f26f150f2d754))
+
 ## 1.0.0 (2024-04-26)
 
 ### 🐛 Bug Fixes
