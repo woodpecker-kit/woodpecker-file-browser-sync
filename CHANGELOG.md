@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [convention-change-log](https://github.com/convention-change/convention-change-log) for commit guidelines.
 
+## [1.2.0](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/compare/1.1.0...v1.2.0) (2025-02-06)
+
+### ✨ Features
+
+* add support for multiple docker bake targets ([2cfc5320](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/2cfc53206cb65cefbf1e1a90952e72bb22dd9f84)), feat [#28](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/issues/28)
+
+### 👷‍ Build System
+
+* comment out zymosis installation and execution ([c8503100](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/c8503100ff5169061e3d36c9a18adb5270c2e519))
+
+* update docker-bake.hcl for image building ([0e4a61fb](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/0e4a61fb0ba200ce460319f7b31aeed21648b0c8))
+
+* pin zymosis version to v1.1.3 ([56587cea](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/56587cea6ff1654c328eb58f225522dd229b0e70))
+
+* bump github.com/woodpecker-kit/woodpecker-tools ([5ef266ba](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/commit/5ef266ba98dab56bd38758d63ebe06f613d21e19))
+
 ## [1.1.0](https://github.com/woodpecker-kit/woodpecker-file-browser-sync/compare/1.0.0...v1.1.0) (2024-12-21)
 
 ### ✨ Features
