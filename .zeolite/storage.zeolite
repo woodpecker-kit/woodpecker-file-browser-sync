@@ -1,0 +1,47 @@
+zeolite-version-file-name: .zeolite-version
+zeolite-version-content:
+    version: v1.3.6
+    build_id: h1:GGHPsmOCsjvlA7jVJLvLfqiBouDzFrM1p+CsZ8fIW3A=
+zeolite-record:
+    item:
+        - group: golang
+          tpl-item:
+            - tpl-type: makefile-cli
+              path:
+                - z-MakefileUtils/MakeBasicEnv.mk
+                - z-MakefileUtils/go-mod.mk
+                - z-MakefileUtils/go-list.mk
+                - z-MakefileUtils/go-test.mk
+                - z-MakefileUtils/go-test-integration.mk
+                - z-MakefileUtils/go-dist.mk
+                - z-MakefileUtils/go-doc.mk
+                - z-MakefileUtils/MakeDocker.mk
+                - .golangci-v2.yaml
+                - build.dockerfile
+                - Dockerfile
+                - Makefile
+                - .goreleaser.yml
+                - Taskfile.yml
+        - group: ci-github
+          tpl-item:
+            - tpl-type: version
+              path:
+                - version.yml
+            - tpl-type: action-golang-docker-cli
+              path:
+                - docker-bake.hcl
+                - version.yml
+                - golang-ci.yml
+                - goreleaser-golang.yml
+                - docker-buildx-bake-hubdocker-latest.yml
+                - docker-buildx-bake-hubdocker-tag.yml
+                - deploy-tag.yml
+                - ci.yml
+            - tpl-type: auto-merge-dependabot
+              path:
+                - auto-merge-dependabot.yml
+        - group: doc
+          tpl-item:
+            - tpl-type: golang-doc-cli
+              path:
+                - doc-dev/dev.md

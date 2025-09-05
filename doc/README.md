@@ -4,8 +4,21 @@ how to dev
 
 ## env
 
-- minimum go version: go 1.21
-- change `go 1.21`, `^1.21`, `1.21.13` to new go version
+- minimum go version: go 1.24
+- change `go 1.24`, `^1.24`, `1.24.7` to new go version
+- lint
+    - golangci-lint will update to v2
+    - change `golangci/golangci-lint:v2.1.6` # https://hub.docker.com/r/golangci/golangci-lint/tags
+    - change `woodpeckerci/plugin-reviewdog-golangci-lint:1.61.0` version
+      from [woodpeckerci/plugin-reviewdog-golangci-lint](https://hub.docker.com/r/woodpeckerci/plugin-reviewdog-golangci-lint/tags)
+      code [woodpecker-plugins/reviewdog-golangci-lint](https://codeberg.org/woodpecker-plugins/reviewdog-golangci-lint)
+
+- [reviewdog](https://github.com/reviewdog/reviewdog) code review tool integrated with any code analysis tools
+
+- change goreleaser
+    - from [goreleaser docker tags](https://hub.docker.com/r/goreleaser/goreleaser/tags) to new version
+    - `goreleaser/goreleaser:v2.9.0`
+    - from [goreleaser version release](https://github.com/goreleaser/goreleaser/releases) to new version
 
 ### libs
 
