@@ -49,10 +49,10 @@ formatters:
   # Default: [] (uses standard Go formatting)
   enable:
     - gci
-    - gofmt
-    - gofumpt
-    - goimports
-    - golines
+    # - gofmt
+    # - gofumpt
+    # - goimports
+    # - golines
   # Formatters settings.
   # settings:
   #   # See the dedicated "formatters.settings" documentation section.
